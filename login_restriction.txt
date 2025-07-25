@@ -1,0 +1,4 @@
+If you want to restrict other pages (like dashboard or orders) so they also require login, just add this line at the top of their <script>:
+if(localStorage.getItem('restaurant_logged_in') !== 'true'){
+  window.location.href = "login.html";
+}

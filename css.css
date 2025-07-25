@@ -1,0 +1,11 @@
+/restaurant-portal/
+  index.html         ← Dashboard
+  orders.html        ← Orders
+  menu.html          ← Menu management
+  assets/
+    css/
+      style.css
+    js/
+      main.js
+      orders.js
+      menu.js

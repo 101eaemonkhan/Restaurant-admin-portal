@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Staff Users & Attendance - Restaurant Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body { background: #f7fafc; font-family: 'Nunito', Arial, sans-serif;}
+    .sidebar { min-width:220px; max-width:240px; background:#24292f; color:#fff; }
+    .sidebar h3 { font-weight: bold; margin-bottom: 2rem; }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover {
+      background: #3d4852; color: #ffc107 !important; border-radius: 6px;
+    }
+    .staff-table th, .staff-table td { vertical-align: middle; text-align: center; }
+    .badge-role { font-size: 1em; background:#ffe082; color: #795548;}
+    @media (max-width: 800px) { .sidebar {display: none;} main {padding: 10px;} }
+  </style>
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar p-3 vh-100">
+      <h3>🍽️ My Restaurant</h3>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2"><a href="index.html" class="nav-link text-white">Dashboard</a></li>
+        <li class="nav-item mb-2"><a href="orders.html" class="nav-link text-white">Orders</a></li>
+        <li class="nav-item mb-2"><a href="takeaway.html" class="nav-link text-white">Takeaway</a></li>
+        <li class="nav-item mb-2"><a href="menu.html" class="nav-link text-white">Menu</a></li>
+        <li class="nav-item mb-2"><a href="meals.html" class="nav-link text-white">Meals</a></li>
+        <li class="nav-item mb-2"><a href="staff.html" class="nav-link text-white active">Staff</a></li>
+        <li class="nav-item mb-2"><a href="reports.html" class="nav-link text-white">Reports</a></li>
+        <li class="nav-item mb-2"><a href="calendar-report.html" class="nav-link text-white">Calendar Report</a></li>
+        <li class="nav-item mb-2"><a href="settings.html" class="nav-link text-white">Settings</a></li>
+        <li class="nav-item mt-4"><a href="#" id="logoutBtn" class="nav-link text-danger">Logout</a></li>
+      </ul>
+    </nav>
+    <!-- Main Content -->
+    <main class="flex-fill p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><span style="font-size:1.3em;">👨‍🍳</span> Staff Users & Attendance</h2>
+        <button class="btn btn-success shadow" data-bs-toggle="modal" data-bs-target="#addStaffModal">+ Add Staff</button>
+      </div>
+      <!-- Attendance Date Picker -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Select Date:</label>
+        <input type="date" id="attendanceDate" class="form-control" style="max-width:220px;display:inline-block;">
+      </div>
+      <!-- Staff Table -->
+      <div class="card shadow border-0 mb-4">
+        <div class="card-body p-3">
+          <div class="table-responsive">
+            <table class="table staff-table table-hover align-middle mb-0">
+              <thead class="table-warning">
+                <tr>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Email / Contact</th>
+                  <th>Attendance</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="staffTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Add Staff Modal -->
+      <div class="modal fade" id="addStaffModal" tabindex="-1">
+        <div class="modal-dialog">
+          <form class="modal-content" id="staffForm" autocomplete="off">
+            <div class="modal-header border-0">
+              <h5 class="modal-title fw-bold">Add Staff</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pb-0">
+              <input type="text" class="form-control mb-2" placeholder="Full Name" id="staffName" required>
+              <input type="text" class="form-control mb-2" placeholder="Username (unique)" id="staffUsername" required>
+              <input type="text" class="form-control mb-2" placeholder="Role (e.g. Waiter, Chef, Manager)" id="staffRole" required>
+              <input type="text" class="form-control mb-2" placeholder="Email or Phone" id="staffContact" required>
+            </div>
+            <div class="modal-footer border-0">
+              <button type="submit" class="btn btn-success px-4">Add</button>
+              <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Edit Modal -->
+      <div class="modal fade" id="editStaffModal" tabindex="-1">
+        <div class="modal-dialog">
+          <form class="modal-content" id="editStaffForm" autocomplete="off">
+            <div class="modal-header border-0">
+              <h5 class="modal-title fw-bold">Edit Staff</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pb-0">
+              <input type="hidden" id="editStaffIndex">
+              <input type="text" class="form-control mb-2" placeholder="Full Name" id="editStaffName" required>
+              <input type="text" class="form-control mb-2" placeholder="Username (unique)" id="editStaffUsername" required>
+              <input type="text" class="form-control mb-2" placeholder="Role" id="editStaffRole" required>
+              <input type="text" class="form-control mb-2" placeholder="Email or Phone" id="editStaffContact" required>
+            </div>
+            <div class="modal-footer border-0">
+              <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+              <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Require login
+    if(localStorage.getItem('restaurant_logged_in') !== 'true'){
+      window.location.href = "login.html";
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').onclick = function() {
+      localStorage.removeItem('restaurant_logged_in');
+      localStorage.removeItem('restaurant_user');
+      window.location.href = "login.html";
+    };
+
+    // Staff management
+    let staff = JSON.parse(localStorage.getItem('staffUsers') || "[]");
+
+    // Attendance helpers
+    function getTodayDateStr() {
+      return (new Date()).toISOString().split("T")[0];
+    }
+    document.getElementById('attendanceDate').value = getTodayDateStr();
+    document.getElementById('attendanceDate').onchange = renderStaff;
+
+    function renderStaff(){
+      const table = document.getElementById('staffTable');
+      table.innerHTML = "";
+      if(staff.length === 0) {
+        table.innerHTML = `<tr><td colspan="5" class="text-muted py-4">No staff users added yet.</td></tr>`;
+        return;
+      }
+      let attData = JSON.parse(localStorage.getItem('attendanceData') || "{}");
+      let dateStr = document.getElementById('attendanceDate').value || getTodayDateStr();
+
+      staff.forEach((user, idx) => {
+        let status = (attData[dateStr] && attData[dateStr][user.username]) || "absent";
+        let isPresent = status === "present";
+        table.innerHTML += `
+          <tr>
+            <td>${user.name}</td>
+            <td><span class="badge badge-role">${user.role}</span></td>
+            <td>${user.contact}</td>
+            <td>
+              <button class="btn btn-sm ${isPresent ? 'btn-success' : 'btn-outline-success'}" onclick="setAttendance('${user.username}','present')">✔️</button>
+              <button class="btn btn-sm ${!isPresent ? 'btn-danger' : 'btn-outline-danger'}" onclick="setAttendance('${user.username}','absent')">❌</button>
+            </td>
+            <td>
+              <button class="btn btn-outline-secondary btn-sm" onclick="editStaff(${idx})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteStaff(${idx})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    window.setAttendance = function(username, status) {
+      let attData = JSON.parse(localStorage.getItem('attendanceData') || "{}");
+      let dateStr = document.getElementById('attendanceDate').value || getTodayDateStr();
+      if (!attData[dateStr]) attData[dateStr] = {};
+      attData[dateStr][username] = status;
+      localStorage.setItem('attendanceData', JSON.stringify(attData));
+      renderStaff();
+    };
+
+    document.getElementById('staffForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const username = document.getElementById('staffUsername').value.trim();
+      if (!username) {
+        alert("Username required!");
+        return;
+      }
+      if (staff.some(s => s.username === username)) {
+        alert("Username must be unique!");
+        return;
+      }
+      staff.push({
+        name: document.getElementById('staffName').value,
+        username,
+        role: document.getElementById('staffRole').value,
+        contact: document.getElementById('staffContact').value
+      });
+      localStorage.setItem('staffUsers', JSON.stringify(staff));
+      renderStaff();
+      this.reset();
+      bootstrap.Modal.getInstance(document.getElementById('addStaffModal')).hide();
+    });
+
+    window.deleteStaff = function(idx){
+      if(confirm("Delete this staff user?")) {
+        // Remove attendance data for this user (all days)
+        let attData = JSON.parse(localStorage.getItem('attendanceData') || "{}");
+        Object.keys(attData).forEach(date => {
+          delete attData[date][staff[idx].username];
+        });
+        localStorage.setItem('attendanceData', JSON.stringify(attData));
+        // Remove from staff
+        staff.splice(idx, 1);
+        localStorage.setItem('staffUsers', JSON.stringify(staff));
+        renderStaff();
+      }
+    };
+
+    window.editStaff = function(idx){
+      const user = staff[idx];
+      document.getElementById('editStaffIndex').value = idx;
+      document.getElementById('editStaffName').value = user.name;
+      document.getElementById('editStaffUsername').value = user.username;
+      document.getElementById('editStaffRole').value = user.role;
+      document.getElementById('editStaffContact').value = user.contact;
+      let modal = new bootstrap.Modal(document.getElementById('editStaffModal'));
+      modal.show();
+    };
+
+    document.getElementById('editStaffForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const idx = document.getElementById('editStaffIndex').value;
+      const newUsername = document.getElementById('editStaffUsername').value.trim();
+      if (!newUsername) {
+        alert("Username required!");
+        return;
+      }
+      // Prevent duplicate username
+      if (staff.some((s, i) => s.username === newUsername && i != idx)) {
+        alert("Username must be unique!");
+        return;
+      }
+      staff[idx].name = document.getElementById('editStaffName').value;
+      staff[idx].username = newUsername;
+      staff[idx].role = document.getElementById('editStaffRole').value;
+      staff[idx].contact = document.getElementById('editStaffContact').value;
+      localStorage.setItem('staffUsers', JSON.stringify(staff));
+      renderStaff();
+      bootstrap.Modal.getInstance(document.getElementById('editStaffModal')).hide();
+    });
+
+    renderStaff();
+  </script>
+  <div class="text-center text-muted" style="font-size: 0.98rem;">
+        &copy; 2025 My Restaurant Portal Design by iToolapk
+      </div>
+</body>
+</html>

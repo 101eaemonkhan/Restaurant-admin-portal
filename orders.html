@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Orders - Restaurant Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    .bg-dark { background: #24292f !important; }
+    .sidebar { min-width:220px; max-width:240px; background:#24292f; color:#fff; }
+    .sidebar h3 { font-weight: bold; margin-bottom: 2rem; }
+    .order-table th, .order-table td { vertical-align: middle !important; text-align: center; }
+    .emoji { font-size: 1.4rem; margin-right: 6px; vertical-align: middle; }
+    .status-badge { font-size: 1em; }
+    .total-earnings-card { background: #fff9e6; border: 1px solid #ffe082; }
+  </style>
+    <script>
+      if (localStorage.getItem('restaurant_logged_in') !== 'true') {
+  window.location.href = "login.html";
+}
+if(!localStorage.getItem('restaurant_users')) {
+  let users = [
+    { username: "admin", password: "12345", role: "admin", name: "Admin User", contact: "admin@email.com" },
+    { username: "john", password: "abcd", role: "waiter", name: "John Doe", contact: "john@email.com" }
+  ];
+  localStorage.setItem('restaurant_users', JSON.stringify(users));
+}
+</script> 
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar p-3 vh-100">
+      <h3>🍽️ My Restaurant</h3>
+      <ul class="nav flex-column">
+       <li class="nav-item mb-2"><a href="index.html" class="nav-link text-white">Dashboard</a></li>
+        <li class="nav-item mb-2"><a href="orders.html" class="nav-link text-white">Orders</a></li>
+        <li class="nav-item mb-2"><a href="takeaway.html" class="nav-link text-white">Takeaway</a></li>
+        <li class="nav-item mb-2"><a href="menu.html" class="nav-link text-white">Menu</a></li>
+        <li class="nav-item mb-2"><a href="meals.html" class="nav-link text-white active">Meals</a></li>
+        <li class="nav-item mb-2"><a href="staff.html" class="nav-link text-white">Staff</a></li>
+        <li class="nav-item mb-2"><a href="reports.html" class="nav-link text-white active">Reports</a>
+          <li class="nav-item mb-2"><a href="calendar-report.html" class="nav-link text-white active">Calendar Report</a></li>
+        <li class="nav-item mb-2"><a href="settings.html" class="nav-link text-white">Settings</a></li>
+        <li class="nav-item mt-4"><a href="settings.html" id="logoutBtn" class="nav-link text-danger">Logout</a></li>
+      </ul>
+    </nav>
+    <!-- Main Content -->
+    <main class="flex-fill p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><span class="emoji">📝</span> Orders</h2>
+        <button class="btn btn-success btn-lg shadow" data-bs-toggle="modal" data-bs-target="#addOrderModal">+ Add Order</button>
+      </div>
+      <div class="card shadow border-0 mb-4">
+        <div class="card-body p-4">
+          <div class="table-responsive">
+            <table class="table order-table table-hover table-striped align-middle mb-0">
+              <thead class="table-warning">
+                <tr>
+                  <th>Order ID</th>
+                  <th>Table</th>
+                  <th>Food Name</th>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th>Customer</th>
+                  <th>Status</th>
+                  <th>Date & Time</th>
+                  <th>Price</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTable">
+                <!-- Orders will be injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Total Earnings Section -->
+      <div class="card total-earnings-card p-4 mb-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <h4 class="fw-bold m-0">💰 Total Earnings:</h4>
+          <span id="totalEarnings" class="fs-3 fw-bold text-success">$0.00</span>
+        </div>
+      </div>
+      <!-- Add Order Modal -->
+      <div class="modal fade" id="addOrderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <form class="modal-content" id="orderForm">
+            <div class="modal-header border-0">
+              <h5 class="modal-title fw-bold">Add New Order</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pb-0">
+              <div class="mb-3">
+                <label class="form-label">Table Number</label>
+                <select class="form-control" id="orderTableNumber" required>
+                  <option value="" disabled selected>Select Table</option>
+                  <option>Table 1</option>
+                  <option>Table 2</option>
+                  <option>Table 3</option>
+                  <option>Table 4</option>
+                  <option>Table 5</option>
+                  <option>Table 6</option>
+                  <option>Table 7</option>
+                  <option>Table 8</option>
+                  <option>Table 9</option>
+                  <option>Table 10</option>
+                </select>
+              </div>
+              <input type="text" class="form-control mb-2" placeholder="Food Name" id="foodName" required>
+              <input type="text" class="form-control mb-2" placeholder="Item Description" id="orderItem" required>
+              <input type="number" class="form-control mb-2" placeholder="Quantity" id="orderQty" min="1" required>
+              <input type="text" class="form-control mb-2" placeholder="Customer" id="orderCustomer" required>
+              <input type="number" class="form-control mb-2" placeholder="Price (per item)" id="orderPrice" min="0.01" step="0.01" required>
+              <select class="form-control mb-2" id="orderStatus">
+                <option>Pending</option>
+                <option>Completed</option>
+              </select>
+            </div>
+            <div class="modal-footer border-0">
+              <button type="submit" class="btn btn-success px-4">Add Order</button>
+              <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let orders = JSON.parse(localStorage.getItem('orders') || "[]");
+
+      function renderOrders() {
+        const table = document.getElementById('ordersTable');
+        table.innerHTML = '';
+        let total = 0;
+        orders.forEach((order, idx) => {
+          let price = (parseFloat(order.price) * parseInt(order.qty)).toFixed(2);
+          total += parseFloat(price);
+          let statusColor = order.status === "Completed" ? 'success' : 'warning';
+          table.innerHTML += `
+            <tr>
+              <td>#${order.id}</td>
+              <td>${order.tableNumber || ''}</td>
+              <td>${order.foodName}</td>
+              <td>${order.item}</td>
+              <td>${order.qty}</td>
+              <td>${order.customer}</td>
+              <td><span class="badge bg-${statusColor} status-badge">${order.status}</span></td>
+              <td>${order.datetime}</td>
+              <td><span class="text-success fw-bold">$${price}</span></td>
+              <td>
+                ${
+                  order.status === "Pending" 
+                  ? `<button class="btn btn-primary btn-sm mb-2" onclick="markComplete(${idx})">Mark as Complete</button><br>`
+                  : ""
+                }
+                <button class="btn btn-danger btn-sm" onclick="deleteOrder(${idx})">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+        document.getElementById('totalEarnings').textContent = `$${total.toFixed(2)}`;
+      }
+
+      // Global delete handler
+      window.deleteOrder = function(idx) {
+        orders.splice(idx, 1);
+        localStorage.setItem('orders', JSON.stringify(orders));
+        renderOrders();
+      };
+
+      // Global "Mark as Complete" handler
+      window.markComplete = function(idx) {
+        orders[idx].status = "Completed";
+        localStorage.setItem('orders', JSON.stringify(orders));
+        renderOrders();
+      };
+
+      function getCurrentDateTimeString() {
+        const now = new Date();
+        const date = now.toLocaleDateString();
+        const time = now.toLocaleTimeString();
+        return date + " " + time;
+      }
+
+      document.getElementById('orderForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const tableNumber = document.getElementById('orderTableNumber').value;
+        if(!tableNumber) {
+          alert("Please select a table number!");
+          return;
+        }
+        orders.push({
+          id: Date.now().toString().slice(-5),
+          tableNumber: tableNumber,
+          foodName: document.getElementById('foodName').value,
+          item: document.getElementById('orderItem').value,
+          qty: document.getElementById('orderQty').value,
+          customer: document.getElementById('orderCustomer').value,
+          status: document.getElementById('orderStatus').value,
+          price: parseFloat(document.getElementById('orderPrice').value).toFixed(2),
+          datetime: getCurrentDateTimeString()
+        });
+        localStorage.setItem('orders', JSON.stringify(orders));
+        renderOrders();
+
+        // Hide modal via Bootstrap API
+        let modal = bootstrap.Modal.getInstance(document.getElementById('addOrderModal'));
+        if(modal) modal.hide();
+
+        this.reset();
+      });
+
+      renderOrders();
+    });
+  </script>
+  <div class="text-center text-muted" style="font-size: 0.98rem;">
+        &copy; 2025 My Restaurant Portal Design by iToolapk
+      </div>
+</body>
+</html>

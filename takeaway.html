@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Takeaway Orders - Restaurant Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+     <script>
+        if (localStorage.getItem('restaurant_logged_in') !== 'true') {
+  window.location.href = "login.html";
+}
+if(!localStorage.getItem('restaurant_users')) {
+  let users = [
+    { username: "admin", password: "12345", role: "admin", name: "Admin User", contact: "admin@email.com" },
+    { username: "john", password: "abcd", role: "waiter", name: "John Doe", contact: "john@email.com" }
+  ];
+  localStorage.setItem('restaurant_users', JSON.stringify(users));
+}
+</script> 
+
+  <style>
+    body { font-family: 'Nunito', Arial, sans-serif; background: #f7fafc; }
+    .bg-dark { background: #24292f !important; }
+    .sidebar { min-width:220px; max-width:240px; background:#24292f; color:#fff; }
+    .sidebar h3 { font-weight: bold; margin-bottom: 2rem; }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover {
+      background: #3d4852;
+      color: #ffc107 !important;
+      border-radius: 6px;
+    }
+    .order-table th, .order-table td { vertical-align: middle !important; text-align: center; }
+    .timer { font-weight: bold; font-size: 1.05em; }
+    .timer.danger { color: #c0392b; }
+    .timer.warning { color: #f39c12; }
+    .timer.success { color: #27ae60; }
+    @media (max-width: 800px) { .sidebar {display: none;} main {padding: 10px;} }
+  </style>
+ 
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar p-3 vh-100">
+      <h3>🍽️ My Restaurant</h3>
+      <ul class="nav flex-column">
+       <li class="nav-item mb-2"><a href="index.html" class="nav-link text-white">Dashboard</a></li>
+        <li class="nav-item mb-2"><a href="orders.html" class="nav-link text-white">Orders</a></li>
+        <li class="nav-item mb-2"><a href="takeaway.html" class="nav-link text-white">Takeaway</a></li>
+        <li class="nav-item mb-2"><a href="menu.html" class="nav-link text-white">Menu</a></li>
+        <li class="nav-item mb-2"><a href="meals.html" class="nav-link text-white active">Meals</a></li>
+        <li class="nav-item mb-2"><a href="staff.html" class="nav-link text-white">Staff</a></li>
+        <li class="nav-item mb-2"><a href="reports.html" class="nav-link text-white active">Reports</a>
+          <li class="nav-item mb-2"><a href="calendar-report.html" class="nav-link text-white active">Calendar Report</a></li>
+        <li class="nav-item mb-2"><a href="settings.html" class="nav-link text-white">Settings</a></li>
+        <li class="nav-item mt-4"><a href="settings.html" id="logoutBtn" class="nav-link text-danger">Logout</a></li>
+      </ul>
+    </nav>
+    <!-- Main Content -->
+    <main class="flex-fill p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><span style="font-size:1.4em;">🥡</span> Takeaway Orders</h2>
+        <button class="btn btn-success btn-lg shadow" data-bs-toggle="modal" data-bs-target="#addTakeawayOrderModal">+ New Takeaway Order</button>
+      </div>
+      <div class="card shadow border-0 mb-4">
+        <div class="card-body p-4">
+          <div class="table-responsive">
+            <table class="table order-table table-hover table-striped align-middle mb-0">
+              <thead class="table-warning">
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Order No.</th>
+                  <th>Meal No.</th>
+                  <th>Food Name</th>
+                  <th>Customer</th>
+                  <th>Location</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Delivery Countdown</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="takeawayOrdersTable">
+                <!-- Takeaway Orders will be injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Add Takeaway Order Modal -->
+      <div class="modal fade" id="addTakeawayOrderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <form class="modal-content" id="takeawayOrderForm">
+            <div class="modal-header border-0">
+              <h5 class="modal-title fw-bold">Add New Takeaway Order</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pb-0">
+              <input type="text" class="form-control mb-2" placeholder="Order Number" id="orderNumber" required>
+              <input type="text" class="form-control mb-2" placeholder="Meal Number (e.g. M12)" id="mealNumber" required>
+              <input type="text" class="form-control mb-2" placeholder="Food Name" id="foodName" required>
+              <input type="text" class="form-control mb-2" placeholder="Customer Name" id="customerName" required>
+              <input type="text" class="form-control mb-2" placeholder="Location" id="orderLocation" required>
+              <input type="number" class="form-control mb-2" placeholder="Quantity" id="orderQty" min="1" required>
+              <input type="number" class="form-control mb-2" placeholder="Total Price" id="orderPrice" min="0.01" step="0.01" required>
+              <input type="number" class="form-control mb-2" placeholder="Delivery in (minutes)" id="orderDeliveryTime" min="1" max="300" required>
+            </div>
+            <div class="modal-footer border-0">
+              <button type="submit" class="btn btn-success px-4">Add Order</button>
+              <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Helper to format countdown
+    function formatCountdown(ms) {
+      if (ms < 0) ms = 0;
+      const mins = Math.floor(ms / 60000);
+      const secs = Math.floor((ms % 60000) / 1000);
+      return `${mins} min ${secs < 10 ? "0" : ""}${secs} sec`;
+    }
+
+    // Load & render orders
+    let takeawayOrders = JSON.parse(localStorage.getItem('takeawayOrders') || "[]");
+
+    function renderTakeawayOrders() {
+      const table = document.getElementById('takeawayOrdersTable');
+      table.innerHTML = '';
+      if (takeawayOrders.length === 0) {
+        table.innerHTML = `<tr><td colspan="10" class="text-muted py-4">No takeaway orders yet.</td></tr>`;
+      } else {
+        takeawayOrders.forEach((order, idx) => {
+          // Delivery end time in ms
+          let deliveryEnd = order.placedAt + (order.deliveryMinutes * 60000);
+          let msLeft = deliveryEnd - Date.now();
+          let timerClass = msLeft > 0
+            ? (msLeft <= 300000 ? 'timer warning' : 'timer success') // <5 min = warning
+            : 'timer danger';
+
+          table.innerHTML += `
+            <tr>
+              <td>${order.datetime}</td>
+              <td>${order.orderNumber}</td>
+              <td>${order.mealNumber}</td>
+              <td>${order.foodName}</td>
+              <td>${order.customerName}</td>
+              <td>${order.location}</td>
+              <td>${order.qty}</td>
+              <td><span class="text-success fw-bold">$${parseFloat(order.price).toFixed(2)}</span></td>
+              <td><span class="${timerClass}" id="timer-${idx}">${formatCountdown(msLeft)}</span></td>
+              <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteTakeawayOrder(${idx})">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    // Countdown update (every second)
+    setInterval(function(){
+      let rows = document.querySelectorAll('[id^="timer-"]');
+      rows.forEach((el, idx) => {
+        let order = takeawayOrders[idx];
+        if (!order) return;
+        let deliveryEnd = order.placedAt + (order.deliveryMinutes * 60000);
+        let msLeft = deliveryEnd - Date.now();
+        let timerClass = msLeft > 0
+            ? (msLeft <= 300000 ? 'timer warning' : 'timer success')
+            : 'timer danger';
+        el.textContent = formatCountdown(msLeft);
+        el.className = timerClass;
+      });
+    }, 1000);
+
+    // Delete handler
+    function deleteTakeawayOrder(idx) {
+      takeawayOrders.splice(idx, 1);
+      localStorage.setItem('takeawayOrders', JSON.stringify(takeawayOrders));
+      renderTakeawayOrders();
+    }
+    window.deleteTakeawayOrder = deleteTakeawayOrder;
+
+    // Add new order
+    document.getElementById('takeawayOrderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const now = new Date();
+      const order = {
+        orderNumber: document.getElementById('orderNumber').value,
+        mealNumber: document.getElementById('mealNumber').value,
+        foodName: document.getElementById('foodName').value,
+        customerName: document.getElementById('customerName').value,
+        location: document.getElementById('orderLocation').value,
+        qty: document.getElementById('orderQty').value,
+        price: parseFloat(document.getElementById('orderPrice').value).toFixed(2),
+        deliveryMinutes: parseInt(document.getElementById('orderDeliveryTime').value),
+        datetime: now.toLocaleDateString() + " " + now.toLocaleTimeString(),
+        placedAt: now.getTime()
+      };
+      takeawayOrders.push(order);
+      localStorage.setItem('takeawayOrders', JSON.stringify(takeawayOrders));
+      renderTakeawayOrders();
+
+      // Hide modal
+      let modal = bootstrap.Modal.getInstance(document.getElementById('addTakeawayOrderModal'));
+      if(modal) modal.hide();
+      this.reset();
+    });
+
+    // Initial render
+    renderTakeawayOrders();
+  </script>
+  <div class="text-center text-muted" style="font-size: 0.98rem;">
+        &copy; 2025 My Restaurant Portal Design by iToolapk
+      </div>
+</body>
+</html>

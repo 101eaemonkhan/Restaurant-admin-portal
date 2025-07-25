@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings - Restaurant Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body { background: #f7fafc; font-family: 'Nunito', Arial, sans-serif;}
+    .sidebar { min-width:220px; max-width:240px; background:#24292f; color:#fff; }
+    .sidebar h3 { font-weight: bold; margin-bottom: 2rem; }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover {
+      background: #3d4852; color: #ffc107 !important; border-radius: 6px;
+    }
+    .settings-card { max-width:480px; margin:auto; background: #fff; border-radius: 15px; box-shadow: 0 4px 18px rgba(80,80,80,0.10); padding:32px 26px 28px 26px;}
+    .form-label { font-weight: 500;}
+    .settings-title { font-weight: bold; font-size:1.5em; margin-bottom:20px;}
+    @media (max-width: 800px) { .sidebar {display: none;} main {padding: 10px;} }
+  </style>
+    <script>
+        if (localStorage.getItem('restaurant_logged_in') !== 'true') {
+  window.location.href = "login.html";
+}
+if(!localStorage.getItem('restaurant_users')) {
+  let users = [
+    { username: "admin", password: "12345", role: "admin", name: "Admin User", contact: "admin@email.com" },
+    { username: "john", password: "abcd", role: "waiter", name: "John Doe", contact: "john@email.com" }
+  ];
+  localStorage.setItem('restaurant_users', JSON.stringify(users));
+}
+
+</script> 
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar p-3 vh-100">
+      <h3>🍽️ My Restaurant</h3>
+      <ul class="nav flex-column">
+       <li class="nav-item mb-2"><a href="index.html" class="nav-link text-white">Dashboard</a></li>
+        <li class="nav-item mb-2"><a href="orders.html" class="nav-link text-white">Orders</a></li>
+        <li class="nav-item mb-2"><a href="takeaway.html" class="nav-link text-white">Takeaway</a></li>
+        <li class="nav-item mb-2"><a href="menu.html" class="nav-link text-white">Menu</a></li>
+        <li class="nav-item mb-2"><a href="meals.html" class="nav-link text-white active">Meals</a></li>
+        <li class="nav-item mb-2"><a href="staff.html" class="nav-link text-white">Staff</a></li>
+        <li class="nav-item mb-2"><a href="reports.html" class="nav-link text-white active">Reports</a>
+          <li class="nav-item mb-2"><a href="calendar-report.html" class="nav-link text-white active">Calendar Report</a></li>
+        <li class="nav-item mb-2"><a href="settings.html" class="nav-link text-white">Settings</a></li>
+        <li class="nav-item mt-4"><a href="settings.html" id="logoutBtn" class="nav-link text-danger">Logout</a></li>
+      </ul>
+    </nav>
+    <!-- Main Content -->
+    <main class="flex-fill p-4">
+      <div class="settings-card">
+        <div class="settings-title mb-3"><span style="font-size:1.3em;">⚙️</span> Settings</div>
+        <div class="mb-3">
+          <label class="form-label">Logged in as:</label>
+          <div class="mb-2">
+            <b id="settingsUser">admin</b>
+          </div>
+        </div>
+        <!-- Change password -->
+        <div class="mb-3">
+          <button class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#pwChangeBox">Change Password</button>
+          <div class="collapse mt-3" id="pwChangeBox">
+            <form id="pwForm">
+              <div class="mb-2">
+                <input type="password" class="form-control" id="oldPw" placeholder="Current Password" required>
+              </div>
+              <div class="mb-2">
+                <input type="password" class="form-control" id="newPw1" placeholder="New Password" required>
+              </div>
+              <div class="mb-2">
+                <input type="password" class="form-control" id="newPw2" placeholder="Repeat New Password" required>
+              </div>
+              <div class="mb-2 text-danger" id="pwError" style="display:none"></div>
+              <div class="mb-2 text-success" id="pwSuccess" style="display:none"></div>
+              <button class="btn btn-primary" type="submit">Change Password</button>
+            </form>
+          </div>
+        </div>
+        <!-- Future settings go here -->
+        <hr>
+        <div class="d-grid">
+          <button class="btn btn-danger btn-lg" id="logoutBtn2">Logout</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Block access if not logged in
+    if(localStorage.getItem('restaurant_logged_in') !== 'true'){
+      window.location.href = "login.html";
+    }
+    // Username (for demo, just show admin)
+    document.getElementById('settingsUser').textContent = localStorage.getItem('restaurant_user') || "admin";
+
+    // Logout
+    document.getElementById('logoutBtn').onclick = function() {
+      localStorage.removeItem('restaurant_logged_in');
+      localStorage.removeItem('restaurant_user');
+      window.location.href = "login.html";
+    };
+    document.getElementById('logoutBtn2').onclick = function() {
+      localStorage.removeItem('restaurant_logged_in');
+      localStorage.removeItem('restaurant_user');
+      window.location.href = "login.html";
+    };
+
+    // Change password logic (demo: password in localStorage, not for production)
+    document.getElementById('pwForm').onsubmit = function(e){
+      e.preventDefault();
+      const oldPw = document.getElementById('oldPw').value;
+      const newPw1 = document.getElementById('newPw1').value;
+      const newPw2 = document.getElementById('newPw2').value;
+      const savedPw = localStorage.getItem('restaurant_password') || "12345";
+      document.getElementById('pwError').style.display = "none";
+      document.getElementById('pwSuccess').style.display = "none";
+      if(oldPw !== savedPw){
+        document.getElementById('pwError').textContent = "Current password is incorrect!";
+        document.getElementById('pwError').style.display = "block";
+        return;
+      }
+      if(newPw1.length < 4){
+        document.getElementById('pwError').textContent = "Password must be at least 4 characters!";
+        document.getElementById('pwError').style.display = "block";
+        return;
+      }
+      if(newPw1 !== newPw2){
+        document.getElementById('pwError').textContent = "Passwords do not match!";
+        document.getElementById('pwError').style.display = "block";
+        return;
+      }
+      localStorage.setItem('restaurant_password', newPw1);
+      document.getElementById('pwSuccess').textContent = "Password changed successfully!";
+      document.getElementById('pwSuccess').style.display = "block";
+      this.reset();
+    }
+  </script>
+  <div class="text-center text-muted" style="font-size: 0.98rem;">
+        &copy; 2025 My Restaurant Portal Design by iToolapk
+      </div>
+</body>
+</html>
+
