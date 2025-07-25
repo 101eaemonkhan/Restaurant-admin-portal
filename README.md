@@ -1,49 +1,56 @@
-Restaurant Management Admin Portal is the ultimate all-in-one web application for restaurants, cafés, or food businesses wanting to streamline their workflow and boost efficiency.
+Restaurant Management Admin Portal
+The ultimate all-in-one web application for restaurants, cafés, or food businesses looking to streamline operations and boost efficiency.
 
-With this portal, you can:
+Key Features:
+Effortless Order Management:
+Seamlessly handle dine-in and takeaway orders, all from one easy dashboard.
 
-Effortlessly manage dine-in and takeaway orders
+Menu & Meals Organization:
+Quickly create, edit, and organize your menu and meal packages with images and pricing.
 
-Organize your menu and meal packages with images and prices
+Secure Admin Panel:
+Manage staff, assign roles, and control access—all protected with secure login.
 
-Admin panel with secure login for managing staff, roles, and access
+Staff Attendance Tracking:
+Mark daily attendance for each staff member with a simple present/absent calendar.
 
-Track daily staff attendance with an easy present/absent calendar
+Live Reports & Analytics:
+Instantly view daily earnings, sales trends, and detailed performance breakdowns.
 
-View real-time reports and analytics, including daily earnings, sales trends, and percentage breakdowns
+Calendar-Based Insights:
+Select any date to see earnings and sales for that day—perfect for business planning.
 
-Calendar-based reporting for instant insights on any selected date
+Modern Responsive Design:
+Works beautifully on desktop, tablet, or mobile devices.
 
-Modern, responsive design for use on desktop, tablet, or mobile
+Special Offer
+Buy from our shop and enjoy:
 
-Special Offer:
+FREE full setup assistance—no technical experience needed!
 
-When you purchase from our shop, we’ll help you set up the portal step-by-step, absolutely free—no technical knowledge required.
+24/7 premium support for a full year. Questions or issues? We're always here to help.
 
-Plus, you get 24/7 priority support for a full year. Have a question or need help? We’re always here for you!
+Why Choose This Solution?
+Fast, hassle-free installation (no database or backend needed)
 
-Why choose this solution?
+Works anywhere—locally, on intranet, or any web host
 
-Fast, hassle-free installation (no database or backend required)
+Fully customizable source code (HTML, CSS, JavaScript)
 
-Works locally, on intranet, or any web host
+Ideal for owners, managers, and developers
 
-100% customizable source code (HTML, CSS, JavaScript)
+Free updates and comprehensive documentation
 
-Suitable for restaurant owners, managers, or developers
+What’s Included:
+Complete source code: Orders, Takeaway, Menu, Meals, Staff, Attendance, Reports, Settings & more
 
-Comes with free updates and detailed documentation
+Free step-by-step setup after purchase
 
-What’s included:
-
-Complete source code for Orders, Takeaway, Menu, Meals, Staff, Attendance, Reports, Settings, and more
-
-Free setup service after purchase
-
-1 year of round-the-clock customer support
+1 year of 24/7 priority customer support
 
 Lifetime license for unlimited use
 
-Grow your business and simplify your daily management—buy now and enjoy instant setup plus premium support!
+Grow your business and simplify daily management—get instant setup and premium support!
 
-Buy now- from iToolapk: https://itoolapk.com/product/restaurant-management-admin-portal/
+<br>
+Buy now from iToolapk » https://itoolapk.com/product/restaurant-management-admin-portal/
