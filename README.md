@@ -54,3 +54,6 @@ Grow your business and simplify daily management—get instant setup and premium
 
 <br>
 Buy now from iToolapk » https://itoolapk.com/product/restaurant-management-admin-portal/
+Login: https://restaurant-management-portal.netlify.app
+user: admin
+password: 12345
